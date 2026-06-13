@@ -1,0 +1,27 @@
+[project]
+name = "entrega-tc-2-grupo-14"
+version = "0.1.0"
+description = "Tech Challenge do grupo 14"
+authors = [
+    {name = "Tareck",email = "tareckali@outlook.com"}
+]
+license = ""
+requires-python = ">=3.12, <3.14"
+dependencies = [
+    "torch (>=2.12.0,<3.0.0)",
+    "scikit-learn (>=1.9.0,<2.0.0)",
+    "mlflow (>=3.13.0,<4.0.0)",
+    "dvc (>=3.67.1,<4.0.0)"
+]
+
+[dependency-groups]
+dev = [
+    "pydantic (>=2.13.4,<3.0.0)",
+    "ruff (>=0.15.17,<0.16.0)",
+    "pytest (>=9.1.0,<10.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
