@@ -7,7 +7,7 @@
 # Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
 
 ARG PYTHON_VERSION=3.13
-FROM python:${PYTHON_VERSION}-slim as base
+FROM python:${PYTHON_VERSION} as builder
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -18,18 +18,6 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
 # Leverage a bind mount to requirements.txt to avoid having to copy them into
@@ -37,23 +25,35 @@ RUN adduser \
 # Install Poetry
 RUN pip install --no-cache-dir poetry
 
-# Configure Poetry to install directly into the container
-RUN poetry config virtualenvs.create false
-
 # Copy dependency files first for Docker cache efficiency
 COPY pyproject.toml poetry.lock ./
 
-# Install dependencies
-RUN poetry install --only main --no-interaction --no-root
-
-# Switch to the non-privileged user to run the application.
-USER appuser
+# Configure Poetry to install directly into the container and install dependencies
+RUN poetry config virtualenvs.create false \
+ && poetry install --only main --no-interaction --no-root
 
 # Copy the source code into the container.
 COPY . .
 
-# Expose the port that the application listens on.
-EXPOSE 8000
+FROM python:${PYTHON_VERSION}-slim
 
-# Run the application.
-CMD ["python", "-m", "your_module"]
+WORKDIR /app
+
+# Create a non-privileged user that the app will run under.
+# See https://docs.docker.com/go/dockerfile-user-best-practices/
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/usr/sbin/nologin" \
+    --no-create-home \
+    appuser
+
+COPY --from=builder /usr/local /usr/local
+COPY --chown=appuser:appuser . .
+
+# Switch to the non-privileged user to run the application.
+USER appuser
+
+# Run the application
+CMD ["dvc", "repro"]
