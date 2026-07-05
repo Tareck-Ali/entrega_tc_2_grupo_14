@@ -14,7 +14,7 @@ from torch.optim import Adam
 from torch.utils.data import DataLoader, Dataset
 
 
-EVENT_WEIGHTS = {
+EVENT_WEIGHTS = { # settings?
     "view": 1.0,
     "addtocart": 3.0,
     "transaction": 5.0,
