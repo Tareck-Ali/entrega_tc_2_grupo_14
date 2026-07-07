@@ -1,3 +1,5 @@
+from configs.settings import settings
+from configs.settings import EVENT_WEIGHTS
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
@@ -17,9 +19,9 @@ def preprocess() -> tuple[pd.DataFrame, LabelEncoder, LabelEncoder]:
             - LabelEncoder: The fitted item label encoder.
     """
 
-    dataframe = pd.read_csv("events.csv") # settings
+    dataframe = pd.read_csv("data\\"+settings.csv_file_name)
 
-    dataframe["rating"] = dataframe["event"].map(EVENT_WEIGHTS) # make 2 settings
+    dataframe["rating"] = dataframe["event"].map(EVENT_WEIGHTS)
 
     user_encoder = LabelEncoder()
     item_encoder = LabelEncoder()

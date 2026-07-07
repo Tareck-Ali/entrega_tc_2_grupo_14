@@ -1,3 +1,4 @@
+from configs.settings import settings
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 from classes import EmbeddingRecommender, InteractionDataset
@@ -31,14 +32,14 @@ def prepare_data():
     df, user_encoder, item_encoder = preprocess()
 
     train_df, val_df = train_test_split(
-        df, test_size=0.2, random_state=42
+        df, test_size=settings.ttsplit_test_size, random_state=settings.ttsplit_random_state
     )
 
     train_dataset = InteractionDataset(train_df)
     val_dataset = InteractionDataset(val_df)
 
-    train_loader = DataLoader(train_dataset, batch_size=256, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=256)
+    train_loader = DataLoader(train_dataset, batch_size=settings.batch_size, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=settings.batch_size)
 
     return df, user_encoder, item_encoder, train_loader, val_loader
 
@@ -63,7 +64,7 @@ def build_model(df):
         embedding_dim=64,
     )
 
-    optimizer = Adam(model.parameters(), lr=1e-3)
+    optimizer = Adam(model.parameters(), lr=settings.learning_rate)
     criterion = nn.MSELoss()
 
     return model, optimizer, criterion
@@ -184,13 +185,13 @@ def train() -> None:
     with setup_mlflow():
 
         mlflow.log_params({
-            "embedding_dim": 64,
-            "batch_size": 256,
-            "epochs": 10,
-            "learning_rate": 1e-3,
+            "embedding_dim": settings.embedding_dim,
+            "batch_size": settings.batch_size,
+            "epochs": settings.epochs,
+            "learning_rate": settings.learning_rate,
         })
 
-        for epoch in range(10):
+        for epoch in range(settings.epochs):
             train_loss = train_epoch(model, train_loader, optimizer, criterion)
             val_loss = validate(model, val_loader, criterion)
 

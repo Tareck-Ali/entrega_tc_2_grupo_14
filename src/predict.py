@@ -1,4 +1,4 @@
-
+from configs.settings import settings
 from sklearn.preprocessing import LabelEncoder
 from classes import EmbeddingRecommender
 import torch
@@ -8,7 +8,7 @@ def recommend(
     visitor_id: int,
     user_encoder: LabelEncoder,
     item_encoder: LabelEncoder,
-    top_k: int = 10,
+    top_k: int = settings.top_k,
 ) -> list[int]:
     """Generates item recommendations for a user.
 
