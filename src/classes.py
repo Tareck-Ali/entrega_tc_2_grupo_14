@@ -13,7 +13,8 @@ class InteractionDataset(Dataset):
     """
 
     def __init__(self, dataframe: pd.DataFrame) -> None:
-        """Inicializa o dataset de interações.
+        """
+        Inicializa o dataset de interações.
         
         Args:
             dataframe:

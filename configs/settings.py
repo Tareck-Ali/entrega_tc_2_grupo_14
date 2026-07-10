@@ -2,19 +2,6 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    """Application configuration loaded from environment variables.
-
-    Environment variables are automatically converted to the appropriate
-    Python types based on the field annotations.
-
-    Attributes:
-        host: Hostname or IP address of the service.
-        port: Port number the service listens on.
-        username: Username used for authentication.
-        password: Password used for authentication.
-        log_level: Logging level for the application.
-        debug: Whether debug mode is enabled.
-    """
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -27,6 +14,7 @@ class Settings(BaseSettings):
     event_weight_transaction: int = 10
     top_k: int = 10
     csv_file_name: str = "settings.csv"
+    model_checkpoint_name: str = "checkpoint.pth"
     ttsplit_test_size: float = 0.2
     ttsplit_random_state: int = 42
     batch_size: int = 256

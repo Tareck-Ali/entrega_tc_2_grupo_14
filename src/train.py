@@ -163,6 +163,19 @@ def save_artifacts(user_encoder, item_encoder, model):
 
     mlflow.pytorch.log_model(model, artifact_path="model")
 
+def save_checkpoint() -> None:
+    """
+    
+    """
+    checkpoint = {
+    "epoch": epoch,
+    "model_state_dict": model.state_dict(),
+    "optimizer_state_dict": optimizer.state_dict(),
+    "loss": loss,
+    }
+
+    torch.save(checkpoint, "data\\"+settings.model_checkpoint_name)
+
 def train() -> None:
     """
     Executa o pipeline completo de treinamento do sistema de recomendação.
@@ -198,6 +211,22 @@ def train() -> None:
             mlflow.log_metric("train_loss", train_loss, step=epoch)
             mlflow.log_metric("validation_loss", val_loss, step=epoch)
 
-            print(f"Epoch {epoch+1:02d} | train={train_loss:.4f} val={val_loss:.4f}")
+            save_checkpoint()
+            #print(f"Epoch {epoch+1:02d} | train={train_loss:.4f} val={val_loss:.4f}")
 
         save_artifacts(user_enc, item_enc, model)
+"""
+def load_checkpoint() -> None:
+    checkpoint = torch.load("checkpoint.pth")
+
+    model = MyModel()
+    optimizer = torch.optim.Adam(model.parameters())
+
+    model.load_state_dict(checkpoint["model_state_dict"])
+    optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+
+    epoch = checkpoint["epoch"]
+    loss = checkpoint["loss"]
+
+    model.train()
+"""

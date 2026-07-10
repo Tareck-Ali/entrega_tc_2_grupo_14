@@ -4,13 +4,14 @@ from classes import EmbeddingRecommender
 import torch
 
 def recommend(
-    model: EmbeddingRecommender,
+    model: EmbeddingRecommender = torch.load("data"+settings.model_checkpoint_name),
     visitor_id: int,
     user_encoder: LabelEncoder,
     item_encoder: LabelEncoder,
     top_k: int = settings.top_k,
 ) -> list[int]:
-"""Gera recomendações de itens para um usuário.
+    """
+    Gera recomendações de itens para um usuário.
 
     As recomendações são produzidas calculando a similaridade entre o
     embedding do usuário e os embeddings de todos os itens e, em

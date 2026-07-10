@@ -4,7 +4,8 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 def preprocess() -> tuple[pd.DataFrame, LabelEncoder, LabelEncoder]:
-    """Pré-processa o conjunto de dados de interações.
+    """
+    Pré-processa o conjunto de dados de interações.
 
     Carrega um DataFrame de interações brutas contendo, no mínimo, as
     seguintes colunas:
