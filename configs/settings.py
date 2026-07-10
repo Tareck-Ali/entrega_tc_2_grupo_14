@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     learning_rate: float = 1e-3
     embedding_dim: int = 64
     epochs: int = 10
+    user_encoder: str = "artifacts/user_encoder.pkl"
+    item_encoder: str = "artifacts/item_encoder.pkl"
 
 EVENT_WEIGHTS = {
     "view": settings.event_weight_view,

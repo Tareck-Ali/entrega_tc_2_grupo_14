@@ -155,8 +155,8 @@ def save_artifacts(user_encoder, item_encoder, model):
     """
     Path("artifacts").mkdir(exist_ok=True)
 
-    joblib.dump(user_encoder, "artifacts/user_encoder.pkl")
-    joblib.dump(item_encoder, "artifacts/item_encoder.pkl")
+    joblib.dump(user_encoder, settings.user_encoder)
+    joblib.dump(item_encoder, settings.item_encoder)
 
     mlflow.log_artifact("artifacts/user_encoder.pkl")
     mlflow.log_artifact("artifacts/item_encoder.pkl")

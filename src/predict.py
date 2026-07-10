@@ -3,27 +3,21 @@ from sklearn.preprocessing import LabelEncoder
 from classes import EmbeddingRecommender
 import torch
 
+#function above 20 lines!!! Remake docstring!!!
+
 def recommend(
-    model: EmbeddingRecommender = torch.load("data"+settings.model_checkpoint_name),
     visitor_id: int,
-    user_encoder: LabelEncoder,
-    item_encoder: LabelEncoder,
     top_k: int = settings.top_k,
 ) -> list[int]:
     """
-    Gera recomendações de itens para um usuário.
+    Pega o modelo e gera recomendações de itens para um usuário.
 
     As recomendações são produzidas calculando a similaridade entre o
     embedding do usuário e os embeddings de todos os itens e, em
     seguida, selecionando os itens com as maiores pontuações.
 
     Args:
-        model: Modelo de recomendação treinado.
         visitor_id: Identificador original do usuário.
-        user_encoder: Codificador de rótulos utilizado para os
-            identificadores dos usuários.
-        item_encoder: Codificador de rótulos utilizado para os
-            identificadores dos itens.
         top_k: Número de recomendações a serem retornadas.
 
     Returns:
@@ -34,6 +28,10 @@ def recommend(
             treinamento e não puder ser codificado pelo codificador de
             usuários.
     """
+
+    model = torch.load("data"+settings.model_checkpoint_name)
+    user_encoded = load(settings.user_encoded)
+    item_encoded = load(settings.item_encoded)
 
     user_index = user_encoder.transform(
         [visitor_id]
