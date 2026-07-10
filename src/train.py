@@ -12,22 +12,22 @@ import joblib
 
 def prepare_data():
     """
-    Prepares training and validation data loaders for the recommendation system.
+    Prepara os carregadores de dados de treinamento e validação para o sistema de recomendação.
 
-    This function:
-    - Loads and preprocesses the raw interaction data via `preprocess()`
-    - Encodes users and items into integer indices
-    - Splits the dataset into training and validation sets
-    - Wraps the splits into `InteractionDataset` objects
-    - Creates PyTorch DataLoaders for batching
+    Esta função:
+    - Carrega e pré-processa os dados brutos de interação através de `preprocess()`
+    - Codifica usuários e itens em índices inteiros
+    - Divide o conjunto de dados em conjuntos de treinamento e validação
+    - Encapsula as divisões em objetos `InteractionDataset`
+    - Cria DataLoaders do PyTorch para agrupamento em batches
 
     Returns:
-        tuple: A tuple containing:
-            - df (pd.DataFrame): Full preprocessed dataset with encoded user/item indices
-            - user_encoder: Encoder used to transform user IDs into indices
-            - item_encoder: Encoder used to transform item IDs into indices
-            - train_loader (DataLoader): Training data loader
-            - val_loader (DataLoader): Validation data loader
+        tuple: Uma tupla contendo:
+            - df (pd.DataFrame): Conjunto de dados completo pré-processado com índices de usuário/item codificados
+            - user_encoder: Codificador usado para transformar IDs de usuários em índices
+            - item_encoder: Codificador usado para transformar IDs de itens em índices
+            - train_loader (DataLoader): Carregador de dados de treinamento
+            - val_loader (DataLoader): Carregador de dados de validação
     """
     df, user_encoder, item_encoder = preprocess()
 
@@ -45,18 +45,18 @@ def prepare_data():
 
 def build_model(df):
     """
-    Builds the embedding-based recommender model along with optimizer and loss function.
+    Constrói o modelo de recomendação baseado em embeddings junto com o otimizador e a função de perda.
 
-    The model learns user and item embeddings to predict interaction scores.
+    O modelo aprende embeddings de usuários e itens para prever pontuações de interação.
 
     Args:
-        df (pd.DataFrame): Preprocessed dataset containing at least 'user_idx' and 'item_idx' columns.
+        df (pd.DataFrame): Conjunto de dados pré-processado contendo pelo menos as colunas 'user_idx' e 'item_idx'.
 
     Returns:
-        tuple: A tuple containing:
-            - model (EmbeddingRecommender): Initialized recommendation model
-            - optimizer (torch.optim.Optimizer): Adam optimizer for training
-            - criterion (torch.nn.Module): Loss function (MSELoss)
+        tuple: Uma tupla contendo:
+            - model (EmbeddingRecommender): Modelo de recomendação inicializado
+            - optimizer (torch.optim.Optimizer): Otimizador Adam para treinamento
+            - criterion (torch.nn.Module): Função de perda (MSELoss)
     """
     model = EmbeddingRecommender(
         num_users=df["user_idx"].nunique(),
@@ -71,18 +71,18 @@ def build_model(df):
 
 def train_epoch(model, loader, optimizer, criterion):
     """
-    Trains the model for one epoch over the provided dataset.
+    Treina o modelo por uma época sobre o conjunto de dados fornecido.
 
-    Performs forward pass, loss computation, backpropagation, and optimizer updates.
+    Executa o forward pass, cálculo da perda, retropropagação e atualizações do otimizador.
 
     Args:
-        model (torch.nn.Module): Recommendation model
-        loader (DataLoader): Training data loader
-        optimizer (torch.optim.Optimizer): Optimizer used for parameter updates
-        criterion (torch.nn.Module): Loss function
+        model (torch.nn.Module): Modelo de recomendação
+        loader (DataLoader): Carregador de dados de treinamento
+        optimizer (torch.optim.Optimizer): Otimizador usado para atualização dos parâmetros
+        criterion (torch.nn.Module): Função de perda
 
     Returns:
-        float: Average training loss across all batches in the epoch
+        float: Perda média de treinamento em todos os batches da época
     """
     model.train()
     total_loss = 0.0
@@ -101,17 +101,17 @@ def train_epoch(model, loader, optimizer, criterion):
 
 def validate(model, loader, criterion):
     """
-    Evaluates the model on the validation dataset.
+    Avalia o modelo no conjunto de dados de validação.
 
-    Runs inference without gradient computation and computes average loss.
+    Executa inferência sem cálculo de gradientes e calcula a perda média.
 
     Args:
-        model (torch.nn.Module): Trained recommendation model
-        loader (DataLoader): Validation data loader
-        criterion (torch.nn.Module): Loss function
+        model (torch.nn.Module): Modelo de recomendação treinado
+        loader (DataLoader): Carregador de dados de validação
+        criterion (torch.nn.Module): Função de perda
 
     Returns:
-        float: Average validation loss across all batches
+        float: Perda média de validação em todos os batches
     """
     model.eval()
     total_loss = 0.0
@@ -126,32 +126,32 @@ def validate(model, loader, criterion):
 
 def setup_mlflow():
     """
-    Configures and starts an MLflow experiment run.
+    Configura e inicia uma execução de experimento no MLflow.
 
-    This function:
-    - Sets the experiment name to "recommendation-system"
-    - Starts and returns an MLflow run context
+    Esta função:
+    - Define o nome do experimento como "recommendation-system"
+    - Inicia e retorna um contexto de execução do MLflow
 
     Returns:
-        mlflow.ActiveRun: Active MLflow run context manager
+        mlflow.ActiveRun: Gerenciador de contexto da execução ativa do MLflow
     """
     mlflow.set_experiment("recommendation-system")
     return mlflow.start_run()
 
 def save_artifacts(user_encoder, item_encoder, model):
     """
-    Saves model artifacts and logs them to MLflow.
+    Salva artefatos do modelo e os registra no MLflow.
 
-    This function:
-    - Creates a local artifacts directory if it does not exist
-    - Serializes user and item encoders using joblib
-    - Logs encoders as artifacts in MLflow
-    - Logs the trained PyTorch model to MLflow
+    Esta função:
+    - Cria um diretório local de artefatos caso ele não exista
+    - Serializa os codificadores de usuário e item usando joblib
+    - Registra os codificadores como artefatos no MLflow
+    - Registra o modelo PyTorch treinado no MLflow
 
     Args:
-        user_encoder: Encoder used for user ID transformation
-        item_encoder: Encoder used for item ID transformation
-        model (torch.nn.Module): Trained recommendation model
+        user_encoder: Codificador usado para transformação de IDs de usuários
+        item_encoder: Codificador usado para transformação de IDs de itens
+        model (torch.nn.Module): Modelo de recomendação treinado
     """
     Path("artifacts").mkdir(exist_ok=True)
 
@@ -165,15 +165,15 @@ def save_artifacts(user_encoder, item_encoder, model):
 
 def train() -> None:
     """
-    Runs the full training pipeline for the recommendation system.
+    Executa o pipeline completo de treinamento do sistema de recomendação.
 
-    This function:
-    - Prepares data loaders and encoders
-    - Builds the model, optimizer, and loss function
-    - Initializes MLflow tracking
-    - Trains the model for a fixed number of epochs (10)
-    - Logs training/validation metrics to MLflow
-    - Saves trained model and encoders as artifacts
+    Esta função:
+    - Prepara os carregadores de dados e codificadores
+    - Constrói o modelo, o otimizador e a função de perda
+    - Inicializa o rastreamento do MLflow
+    - Treina o modelo por um número fixo de épocas (10)
+    - Registra métricas de treinamento/validação no MLflow
+    - Salva o modelo treinado e os codificadores como artefatos
 
     Returns:
         None
