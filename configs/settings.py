@@ -24,12 +24,12 @@ class Settings(BaseSettings):
     user_encoder: str = "artifacts/user_encoder.pkl"
     item_encoder: str = "artifacts/item_encoder.pkl"
 
+settings = Settings()
+
 EVENT_WEIGHTS = {
     "view": settings.event_weight_view,
     "addtocart": settings.event_weight_addtocart,
     "transaction": settings.event_weight_transaction,
 }
-
-settings = Settings()
 
 #print(settings.host)
