@@ -10,25 +10,28 @@ def recommend(
     item_encoder: LabelEncoder,
     top_k: int = settings.top_k,
 ) -> list[int]:
-    """Generates item recommendations for a user.
+"""Gera recomendações de itens para um usuário.
 
-    Recommendations are produced by computing the similarity between the
-    user's embedding and all item embeddings, then selecting the highest
-    scoring items.
+    As recomendações são produzidas calculando a similaridade entre o
+    embedding do usuário e os embeddings de todos os itens e, em
+    seguida, selecionando os itens com as maiores pontuações.
 
     Args:
-        model: Trained recommendation model.
-        visitor_id: Original user identifier.
-        user_encoder: Label encoder used for user identifiers.
-        item_encoder: Label encoder used for item identifiers.
-        top_k: Number of recommendations to return.
+        model: Modelo de recomendação treinado.
+        visitor_id: Identificador original do usuário.
+        user_encoder: Codificador de rótulos utilizado para os
+            identificadores dos usuários.
+        item_encoder: Codificador de rótulos utilizado para os
+            identificadores dos itens.
+        top_k: Número de recomendações a serem retornadas.
 
     Returns:
-        A list containing the recommended item identifiers.
+        Uma lista contendo os identificadores dos itens recomendados.
 
     Raises:
-        ValueError: If ``visitor_id`` was not present during training and
-            cannot be encoded by the user encoder.
+        ValueError: Se ``visitor_id`` não estava presente durante o
+            treinamento e não puder ser codificado pelo codificador de
+            usuários.
     """
 
     user_index = user_encoder.transform(

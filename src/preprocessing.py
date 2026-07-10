@@ -4,19 +4,23 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 def preprocess() -> tuple[pd.DataFrame, LabelEncoder, LabelEncoder]:
-    """Preprocesses the interaction dataset.
+    """Pré-processa o conjunto de dados de interações.
 
-    Loads a raw interaction DataFrame containing at least the following columns:
-        visitorid, itemid, and event.
+    Carrega um DataFrame de interações brutas contendo, no mínimo, as
+    seguintes colunas:
+        visitorid, itemid e event.
 
-    Event types are converted into numeric ratings, and user and item
-    identifiers are label encoded for use in embedding layers.
+    Os tipos de evento são convertidos em avaliações numéricas, e os
+    identificadores de usuários e itens são codificados por meio de
+    codificadores de rótulos para uso nas camadas de embedding.
 
     Returns:
-        tuple: A tuple containing:
-            - pd.DataFrame: The processed interaction DataFrame.
-            - LabelEncoder: The fitted user label encoder.
-            - LabelEncoder: The fitted item label encoder.
+        tuple: Uma tupla contendo:
+            - pd.DataFrame: O DataFrame de interações processado.
+            - LabelEncoder: O codificador de rótulos ajustado para os
+              usuários.
+            - LabelEncoder: O codificador de rótulos ajustado para os
+              itens.
     """
 
     dataframe = pd.read_csv("data\\"+settings.csv_file_name)

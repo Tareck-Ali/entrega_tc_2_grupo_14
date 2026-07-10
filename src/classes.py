@@ -5,20 +5,22 @@ from torch.utils.data import Dataset
 
 
 class InteractionDataset(Dataset):
-    """PyTorch dataset for user-item interaction records.
-
-    Each sample consists of a user index, an item index, and the
-    corresponding interaction rating used as the training target.
+    """
+    Dataset do PyTorch para registros de interações entre usuários e itens.
+    
+    Cada amostra é composta por um índice de usuário, um índice de item
+    e a respectiva avaliação de interação utilizada como alvo de treinamento.
     """
 
     def __init__(self, dataframe: pd.DataFrame) -> None:
-        """Initializes the interaction dataset.
-
+        """Inicializa o dataset de interações.
+        
         Args:
-            dataframe: DataFrame containing the encoded user indices,
-                item indices, and interaction ratings. The DataFrame
-                must contain the columns ``user_idx``, ``item_idx``,
-                and ``rating``.
+            dataframe:
+                DataFrame contendo os índices codificados dos usuários,
+                dos itens e as avaliações de interação. O DataFrame
+                deve conter as colunas ``user_idx``, ``item_idx`` e
+                ``rating``.
         """
         self.users = torch.tensor(
             dataframe["user_idx"].values,
@@ -36,10 +38,11 @@ class InteractionDataset(Dataset):
         )
 
     def __len__(self) -> int:
-        """Returns the number of interaction samples.
-
+        """
+        Retorna o número de amostras de interação.
+        
         Returns:
-            Number of samples in the dataset.
+            Número de amostras no dataset.
         """
         return len(self.users)
 
@@ -47,14 +50,15 @@ class InteractionDataset(Dataset):
         self,
         index: int,
     ) -> tuple[Tensor, Tensor, Tensor]:
-        """Retrieves a single interaction sample.
-
+        """
+        Recupera uma única amostra de interação.
+        
         Args:
-            index: Position of the sample to retrieve.
-
+            index: Posição da amostra a ser recuperada.
+        
         Returns:
-            A tuple containing the user index, item index, and target
-            rating.
+            Uma tupla contendo o índice do usuário,
+            o índice do item e a avaliação alvo.
         """
 
         return (
@@ -65,11 +69,13 @@ class InteractionDataset(Dataset):
 
 
 class EmbeddingRecommender(nn.Module):
-    """Matrix factorization recommender using embedding layers.
-
-    The model learns latent representations for users and items. The
-    predicted interaction score is computed as the dot product between
-    the corresponding user and item embeddings.
+    """
+    Sistema de recomendação baseado em fatoração de matrizes usando
+    camadas de embedding.
+    
+    O modelo aprende representações latentes para usuários e itens.
+    A pontuação de interação prevista é calculada como o produto
+    escalar entre os embeddings correspondentes do usuário e do item.
     """
     
     def __init__(
@@ -78,12 +84,13 @@ class EmbeddingRecommender(nn.Module):
         num_items: int,
         embedding_dim: int = settings.embedding_dim,
     ) -> None:
-        """Initializes the recommendation model.
-
+        """
+        Inicializa o modelo de recomendação.
+        
         Args:
-            num_users: Number of unique users.
-            num_items: Number of unique items.
-            embedding_dim: Size of the latent embedding vectors.
+            num_users: Número de usuários únicos.
+            num_items: Número de itens únicos.
+            embedding_dim: Dimensão dos vetores de embedding latentes.
         """
 
         super().__init__()
@@ -103,15 +110,15 @@ class EmbeddingRecommender(nn.Module):
         users: Tensor,
         items: Tensor,
     ) -> Tensor:
-        """Computes predicted interaction scores.
-
+        """
+        Calcula as pontuações previstas de interação.
+        
         Args:
-            users: Tensor containing user indices.
-            items: Tensor containing item indices.
-
-        Returns:
-            Tensor containing the predicted interaction score for each
-            user-item pair.
+            users: Tensor contendo os índices dos usuários.
+            items: Tensor contendo os índices dos itens.
+        
+        Returns: Tensor contendo a pontuação de interação
+        prevista para cada par usuário-item.
         """
 
         user_vectors = self.user_embedding(users)
