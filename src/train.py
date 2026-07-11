@@ -160,8 +160,8 @@ def save_artifacts(user_encoder:LabelEncoder, item_encoder:LabelEncoder, model:E
     joblib.dump(user_encoder, settings.user_encoder)
     joblib.dump(item_encoder, settings.item_encoder)
 
-    mlflow.log_artifact("artifacts/user_encoder.pkl")
-    mlflow.log_artifact("artifacts/item_encoder.pkl")
+    mlflow.log_artifact(settings.user_encoder)
+    mlflow.log_artifact(settings.item_encoder)
 
     mlflow.pytorch.log_model(model, artifact_path="model")
 
@@ -173,7 +173,7 @@ def save_checkpoint(epoch:int, model:EmbeddingRecommender, optimizer:any, loss:f
     "loss": loss,
     }
 
-    torch.save(checkpoint, "data\\"+settings.model_checkpoint_name)
+    torch.save(checkpoint, settings.model_checkpoint_name)
 
 def train() -> None:
     """
@@ -191,27 +191,21 @@ def train() -> None:
         None
     """
     df, user_enc, item_enc, train_loader, val_loader = prepare_data()
-
     model, optimizer, criterion = build_model(df)
 
-    with setup_mlflow():
-
+    with setup_mlflow(): # change encodings to be saved later!
         mlflow.log_params({
             "embedding_dim": settings.embedding_dim,
             "batch_size": settings.batch_size,
             "epochs": settings.epochs,
             "learning_rate": settings.learning_rate,
         })
-
         for epoch in range(settings.epochs):
             train_loss = train_epoch(model, train_loader, optimizer, criterion)
             val_loss = validate(model, val_loader, criterion)
-
             mlflow.log_metric("train_loss", train_loss, step=epoch)
             mlflow.log_metric("validation_loss", val_loss, step=epoch)
-
             save_checkpoint()
-
         save_artifacts(user_enc, item_enc, model)
 """
 def load_checkpoint() -> None:

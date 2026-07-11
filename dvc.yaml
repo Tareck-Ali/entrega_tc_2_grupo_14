@@ -1,0 +1,18 @@
+stages:
+  train:
+    cmd: python src/train.py
+    deps:
+    - .env
+    - configs/settings.py
+    - src/classes.py
+    - src/preprocessing.py
+    - src/train
+    outs:
+    - artifacts/item_encoder.pkl
+    - artifacts/user_encoder.pkl
+    - artifacts/checkpoint.pth
+  predict:
+    cmd: python src/predict.py
+    deps:
+    - .env
+    - configs/settings.py

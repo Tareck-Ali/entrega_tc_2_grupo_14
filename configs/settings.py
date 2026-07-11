@@ -21,11 +21,14 @@ class Settings(BaseSettings):
     learning_rate: float = 1e-3
     embedding_dim: int = 64
     epochs: int = 10
-    user_encoder: str = "artifacts/user_encoder.pkl"
-    item_encoder: str = "artifacts/item_encoder.pkl"
+    user_encoder: str = "user_encoder.pkl"
+    item_encoder: str = "item_encoder.pkl"
     visitor_id: int
 
 settings = Settings()
+settings.model_checkpoint_name = "artifacts/"+settings.model_checkpoint_name
+settings.user_encoder = "artifacts/"+settings.user_encoder
+settings.item_encoder = "artifacts/"+settings.item_encoder
 
 EVENT_WEIGHTS = {
     "view": settings.event_weight_view,

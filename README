@@ -22,4 +22,5 @@ user_encoder = artefado das codificações do pytorch dos ids de usuários
 item_encoder = artefado das codificações do pytorch dos ids de produtos
 
 3. execute:
+    dvc pull
     dvc repro

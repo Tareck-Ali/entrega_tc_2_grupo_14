@@ -3,7 +3,7 @@ import torch
 
 visitor_id = settings.visitor_id
 top_k = settings.top_k
-model = torch.load("data"+settings.model_checkpoint_name)
+model = torch.load(settings.model_checkpoint_name)
 user_encoder = torch.load(settings.user_encoder)
 item_encoder = torch.load(settings.item_encoder)
 
