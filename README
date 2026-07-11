@@ -1,3 +1,25 @@
 Dataset:
 https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset/
 
+1. execute:
+    poetry install
+2. configure ambiente .env (em caso de dúvidas, use o .env de demonstração para referência)
+visitor_id = id numérico do visitante
+top_k = número de recomendações demonstradas
+
+event_weight_view = peso de eventos "view" no embedding
+event_weight_addtocart = peso de eventos "addtocart" no embedding
+event_weight_transaction = peso de eventos "transaction" no embedding
+csv_file_name = nome do arquivo csv (inclui extensão)
+model_checkpoint_name = nome do modelo treinado
+ttsplit_test_size = tamanho da divisão train test split
+ttsplit_random_state = nível de aleatoriedade de train test split
+batch_size = tamanho do batch do treino
+learning_rate = learning rate do modelo
+embedding_dim = número de dimensões do embedding
+epochs = iterações de treino
+user_encoder = artefado das codificações do pytorch dos ids de usuários
+item_encoder = artefado das codificações do pytorch dos ids de produtos
+
+3. execute:
+    dvc repro

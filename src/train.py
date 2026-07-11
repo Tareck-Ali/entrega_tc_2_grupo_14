@@ -1,14 +1,16 @@
 from configs.settings import settings
 from sklearn.model_selection import train_test_split
+import torch
 from torch.utils.data import DataLoader
 from classes import EmbeddingRecommender, InteractionDataset
 from preprocessing import preprocess
 from torch.optim import Adam
 from torch import nn
-import torch
 from pathlib import Path
 import mlflow
 import joblib
+from sklearn.preprocessing import LabelEncoder
+import pandas as pd
 
 def prepare_data():
     """
@@ -43,7 +45,7 @@ def prepare_data():
 
     return df, user_encoder, item_encoder, train_loader, val_loader
 
-def build_model(df):
+def build_model(df:pd.dataframe):
     """
     Constrói o modelo de recomendação baseado em embeddings junto com o otimizador e a função de perda.
 
@@ -69,7 +71,7 @@ def build_model(df):
 
     return model, optimizer, criterion
 
-def train_epoch(model, loader, optimizer, criterion):
+def train_epoch(model:EmbeddingRecommender, loader:any, optimizer:any, criterion:any):
     """
     Treina o modelo por uma época sobre o conjunto de dados fornecido.
 
@@ -138,7 +140,7 @@ def setup_mlflow():
     mlflow.set_experiment("recommendation-system")
     return mlflow.start_run()
 
-def save_artifacts(user_encoder, item_encoder, model):
+def save_artifacts(user_encoder:LabelEncoder, item_encoder:LabelEncoder, model:EmbeddingRecommender):
     """
     Salva artefatos do modelo e os registra no MLflow.
 
@@ -163,10 +165,7 @@ def save_artifacts(user_encoder, item_encoder, model):
 
     mlflow.pytorch.log_model(model, artifact_path="model")
 
-def save_checkpoint() -> None:
-    """
-    
-    """
+def save_checkpoint(epoch:int, model:EmbeddingRecommender, optimizer:any, loss:float | any) -> None:
     checkpoint = {
     "epoch": epoch,
     "model_state_dict": model.state_dict(),
@@ -212,7 +211,6 @@ def train() -> None:
             mlflow.log_metric("validation_loss", val_loss, step=epoch)
 
             save_checkpoint()
-            #print(f"Epoch {epoch+1:02d} | train={train_loss:.4f} val={val_loss:.4f}")
 
         save_artifacts(user_enc, item_enc, model)
 """

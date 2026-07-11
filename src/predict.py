@@ -1,38 +1,25 @@
 from configs.settings import settings
-from sklearn.preprocessing import LabelEncoder
-from classes import EmbeddingRecommender
 import torch
 
-#function above 20 lines!!! Remake docstring!!!
+visitor_id = settings.visitor_id
+top_k = settings.top_k
+model = torch.load("data"+settings.model_checkpoint_name)
+user_encoder = torch.load(settings.user_encoder)
+item_encoder = torch.load(settings.item_encoder)
 
-def recommend(
-    visitor_id: int,
-    top_k: int = settings.top_k,
-) -> list[int]:
+def get_user_tensor() -> torch.tensor:
     """
-    Pega o modelo e gera recomendações de itens para um usuário.
+    Gera as top-K recomendações de itens para o usuário atual.
 
-    As recomendações são produzidas calculando a similaridade entre o
-    embedding do usuário e os embeddings de todos os itens e, em
-    seguida, selecionando os itens com as maiores pontuações.
-
-    Args:
-        visitor_id: Identificador original do usuário.
-        top_k: Número de recomendações a serem retornadas.
+    A função obtém a representação do usuário, calcula seu embedding,
+    pontua todos os itens por meio do produto escalar entre o embedding do
+    usuário e os embeddings dos itens, seleciona os K itens com maior
+    pontuação e retorna seus identificadores originais.
 
     Returns:
-        Uma lista contendo os identificadores dos itens recomendados.
-
-    Raises:
-        ValueError: Se ``visitor_id`` não estava presente durante o
-            treinamento e não puder ser codificado pelo codificador de
-            usuários.
+        list[int]: Lista com os IDs dos itens recomendados, ordenados da
+            maior para a menor relevância prevista.
     """
-
-    model = torch.load("data"+settings.model_checkpoint_name)
-    user_encoded = load(settings.user_encoded)
-    item_encoded = load(settings.item_encoded)
-
     user_index = user_encoder.transform(
         [visitor_id]
     )[0]
@@ -41,6 +28,11 @@ def recommend(
         [user_index],
         dtype=torch.long,
     )
+
+    return user_tensor
+
+def recommend() -> list[int]:
+    user_tensor = get_user_tensor()
 
     with torch.no_grad():
 

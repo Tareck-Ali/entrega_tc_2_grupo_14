@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     epochs: int = 10
     user_encoder: str = "artifacts/user_encoder.pkl"
     item_encoder: str = "artifacts/item_encoder.pkl"
+    visitor_id: int
 
 settings = Settings()
 
